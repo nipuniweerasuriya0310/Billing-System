@@ -521,7 +521,6 @@ function loadHistory() {
                 </td>
 
                 <td>
-
                     <button
                         class="btn-black view-btn"
                         data-bill="${safe(bill.billNo)}"
@@ -529,6 +528,14 @@ function loadHistory() {
                     >
                         VIEW
                     </button>
+
+                      <button
+                        class="btn-white delete-btn"
+                        data-bill="${safe(bill.billNo)}"
+                        style="padding:8px 12px"
+                      >
+                        DELETE
+                      </button>
 
                 </td>
 
@@ -550,6 +557,28 @@ function viewBill(billNo) {
   if (bill) {
     showPreview(bill);
   }
+}
+
+function deleteBill(billNo) {
+  const bills = getBills();
+  const bill = bills.find((item) => item.billNo === billNo);
+
+  if (
+    !bill ||
+    !window.confirm(`Delete bill ${billNo}? This cannot be undone.`)
+  ) {
+    return;
+  }
+
+  saveBills(bills.filter((item) => item.billNo !== billNo));
+
+  if (currentBill && currentBill.billNo === billNo) {
+    currentBill = null;
+    showSection("historySection");
+  }
+
+  loadHistory();
+  updateDashboard();
 }
 
 /* =====================================================
@@ -664,9 +693,14 @@ $("newBillBtn").addEventListener("click", () => {
 
 $("historyTable").addEventListener("click", (event) => {
   const button = event.target.closest(".view-btn");
+  const deleteButton = event.target.closest(".delete-btn");
 
   if (button) {
     viewBill(button.dataset.bill);
+  }
+
+  if (deleteButton) {
+    deleteBill(deleteButton.dataset.bill);
   }
 });
 
