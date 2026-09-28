@@ -1,0 +1,430 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>VELLARO | Billing System</title>
+
+    <link rel="stylesheet" href="css/style.css" />
+
+    <!-- Library used for PNG bill download -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  </head>
+
+  <body>
+    <!-- ================= SIDEBAR ================= -->
+
+    <aside class="sidebar">
+      <div class="logo">
+        <h1>VELLARO</h1>
+        <p>PREMIUM FRAGRANCE &amp; APPAREL</p>
+      </div>
+
+      <button class="nav-btn active" data-section="dashboardSection">
+        DASHBOARD
+      </button>
+
+      <button class="nav-btn" data-section="createSection">CREATE BILL</button>
+
+      <button class="nav-btn" data-section="historySection">
+        BILL HISTORY
+      </button>
+    </aside>
+
+    <!-- ================= MAIN ================= -->
+
+    <main class="main">
+      <div class="topbar">
+        <h2 id="pageTitle">Dashboard</h2>
+
+        <div id="currentDate"></div>
+      </div>
+
+      <!-- ================= DASHBOARD ================= -->
+
+      <section id="dashboardSection" class="section active">
+        <div class="dashboard-cards">
+          <div class="card">
+            <p>Total Bills</p>
+            <h3 id="totalBills">0</h3>
+          </div>
+
+          <div class="card">
+            <p>Total Sales</p>
+            <h3>
+              LKR
+              <span id="totalSales">0.00</span>
+            </h3>
+          </div>
+
+          <div class="card">
+            <p>Latest Bill</p>
+            <h3 id="latestBill">---</h3>
+          </div>
+        </div>
+
+        <div class="form-container welcome">
+          <h3 class="section-title">VELLARO BILLING SYSTEM</h3>
+
+          <p>
+            Welcome to the Vellaro Premium Fragrance &amp; Apparel billing
+            system.
+          </p>
+
+          <p>
+            Create professional invoices, save bills, view bill history and
+            download invoices as PNG images.
+          </p>
+        </div>
+      </section>
+
+      <!-- ================= CREATE BILL ================= -->
+
+      <section id="createSection" class="section">
+        <div class="form-container">
+          <!-- CUSTOMER -->
+
+          <h3 class="section-title">CUSTOMER DETAILS</h3>
+
+          <div class="form-grid">
+            <div class="input-group">
+              <label> Customer Name </label>
+
+              <input
+                type="text"
+                id="customerName"
+                placeholder="Enter customer name"
+              />
+            </div>
+
+            <div class="input-group">
+              <label> Customer ID </label>
+
+              <input
+                type="text"
+                id="customerId"
+                placeholder="Enter customer ID"
+              />
+            </div>
+
+            <div class="input-group">
+              <label> Contact Number </label>
+
+              <input
+                type="text"
+                id="customerContact"
+                placeholder="07X XXX XXXX"
+              />
+            </div>
+
+            <div class="input-group full">
+              <label> Address </label>
+
+              <textarea
+                id="customerAddress"
+                placeholder="Enter delivery address"
+              ></textarea>
+            </div>
+          </div>
+
+          <!-- PRODUCT -->
+
+          <h3 class="section-title">PRODUCT DETAILS</h3>
+
+          <div class="product-row">
+            <div class="input-group">
+              <label> Product </label>
+
+              <select id="product">
+                <option value="perfume">Vellaro Premium Perfume</option>
+                <option value="tshirt10">VELLARO 1.0 T shirt</option>
+                <option value="tshirt11">VELLARO 1.1 T shirt</option>
+                <option value="tshirtPolo">
+                  VELLARO POLO Limited Edition T shirt
+                </option>
+                <option value="tshirtBackPrint">
+                  VELLARO Back Print T shirt
+                </option>
+                <option value="tshirtStitchPrint">
+                  VELLARO Stitch Print Limited Edition T shirt
+                </option>
+                <option value="tshirtCropTop">VELLARO Crop Top</option>
+                <option value="tshirtBrink">Brink T shirt</option>
+                <option value="tshirtFrontPrint">
+                  VELLARO Front Print Oversized T shirt
+                </option>
+              </select>
+            </div>
+
+            <div class="input-group">
+              <label> Size </label>
+
+              <select id="size">
+                <option value="50">50ml</option>
+
+                <option value="100">100ml</option>
+              </select>
+            </div>
+
+            <div class="input-group" id="colorGroup">
+              <label> Color </label>
+
+              <input type="text" id="color" placeholder="Type T-shirt color" />
+            </div>
+
+            <div class="input-group">
+              <label> Quantity </label>
+
+              <input type="number" id="quantity" value="1" min="1" />
+            </div>
+
+            <div class="input-group">
+              <label> Unit Price </label>
+
+              <div class="price-display">
+                LKR
+                <input type="number" id="unitPrice" min="0" step="0.01" />
+              </div>
+            </div>
+          </div>
+
+          <!-- PAYMENT -->
+
+          <h3 class="section-title">PAYMENT SUMMARY</h3>
+
+          <div class="form-grid">
+            <div class="input-group">
+              <label> Discount (LKR) </label>
+
+              <input type="number" id="discount" value="0" min="0" />
+            </div>
+
+            <div class="input-group">
+              <label> Delivery Fee </label>
+
+              <input type="number" id="deliveryFee" value="0" min="0" />
+            </div>
+
+            <div class="input-group">
+              <label> Payment Method </label>
+
+              <select id="paymentMethod">
+                <option>Cash on Delivery</option>
+
+                <option>Bank Transfer</option>
+
+                <option>Cash</option>
+
+                <option>Other</option>
+              </select>
+            </div>
+
+            <div class="input-group full">
+              <label> Bill Note </label>
+
+              <textarea
+                id="billNote"
+                placeholder="Add a note for this bill"
+              ></textarea>
+            </div>
+          </div>
+
+          <!-- SUMMARY -->
+
+          <div class="summary">
+            <div class="summary-row">
+              <span> Subtotal </span>
+
+              <strong>
+                LKR
+                <span id="subtotal"> 0.00 </span>
+              </strong>
+            </div>
+
+            <div class="summary-row">
+              <span> Discount </span>
+
+              <strong>
+                LKR
+                <span id="discountDisplay"> 0.00 </span>
+              </strong>
+            </div>
+
+            <div class="summary-row">
+              <span> Delivery Fee </span>
+
+              <strong>
+                LKR
+                <span id="deliveryDisplay"> 0.00 </span>
+              </strong>
+            </div>
+
+            <div class="summary-row total">
+              <span> TOTAL </span>
+
+              <span>
+                LKR
+                <span id="grandTotal"> 0.00 </span>
+              </span>
+            </div>
+          </div>
+
+          <!-- BUTTONS -->
+
+          <div class="buttons">
+            <button class="btn-black" id="createBillBtn">CREATE BILL</button>
+
+            <button class="btn-white" id="clearBtn">CLEAR</button>
+          </div>
+
+          <p class="hint">
+            Set your actual perfume and T-shirt prices inside
+            <b>js/app.js</b>.
+          </p>
+        </div>
+      </section>
+
+      <!-- ================= HISTORY ================= -->
+
+      <section id="historySection" class="section">
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>BILL NO</th>
+
+                <th>DATE</th>
+
+                <th>CUSTOMER</th>
+
+                <th>SIZE</th>
+
+                <th>TOTAL</th>
+
+                <th>ACTION</th>
+              </tr>
+            </thead>
+
+            <tbody id="historyTable"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ================= BILL PREVIEW ================= -->
+      <section id="previewSection" class="section">
+        <div class="bill-preview" id="billPreview">
+          <div class="reference-invoice-head">
+            <div>
+              <h1>VELLARO</h1>
+              <div class="invoice-label">INVOICE</div>
+            </div>
+            <div class="reference-invoice-meta">
+              <strong>INVOICE #<span id="previewBillNo"></span></strong>
+              <strong>Date: <span id="previewDate"></span></strong>
+              <strong>Time: <span id="previewTime"></span></strong>
+              <strong class="invoice-note-header"
+                >NOTE: <span id="previewHeaderNote">—</span></strong
+              >
+            </div>
+          </div>
+
+          <div class="reference-two-col">
+            <div class="reference-block">
+              <h4>BILL TO</h4>
+              <p class="customer-name" id="previewName"></p>
+              <p id="previewAddress"></p>
+              <p>
+                <strong>Phone: <span id="previewContact"></span></strong>
+              </p>
+            </div>
+
+            <div class="reference-block">
+              <h4>ORDER DETAILS</h4>
+              <p>
+                <strong>Customer ID:</strong>
+                <span id="previewCustomerId"></span>
+              </p>
+              <p>
+                <strong>Payment Method:</strong>
+                <span id="previewPayment"></span>
+              </p>
+              <p>
+                <strong>Est. Delivery:</strong>
+                <span id="previewDeliveryDate"></span>
+              </p>
+              <p>
+                <strong>Status:</strong>
+                <span id="previewStatus">Confirmed</span>
+              </p>
+            </div>
+          </div>
+
+          <table class="bill-table reference-items">
+            <thead>
+              <tr>
+                <th>ITEM</th>
+                <th>SIZE</th>
+                <th id="previewColorHeader">COLOR</th>
+                <th>QTY</th>
+                <th>UNIT PRICE</th>
+                <th>DISCOUNT</th>
+                <th>SUBTOTAL</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td id="previewProduct">VELLARO Premium Perfume</td>
+                <td id="previewSize"></td>
+                <td id="previewColor">—</td>
+                <td id="previewQty"></td>
+                <td>Rs.<span id="previewUnitPrice"></span></td>
+                <td>–Rs.<span id="previewDiscount">0.00</span></td>
+                <td>
+                  <strong>Rs.<span id="previewSubtotal"></span></strong>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="reference-summary">
+            <div>
+              <span>Subtotal (After Product Discounts)</span
+              ><strong>Rs.<span id="previewSubtotal2"></span></strong>
+            </div>
+            <div class="discount-line">
+              <span>Total Discounts</span
+              ><strong>–Rs.<span id="previewDiscountTotal">0.00</span></strong>
+            </div>
+            <div>
+              <span>Delivery Charge</span
+              ><strong>Rs.<span id="previewDelivery"></span></strong>
+            </div>
+            <div class="reference-grand">
+              <span>TOTAL AMOUNT DUE</span
+              ><strong>Rs.<span id="previewGrandTotal"></span></strong>
+            </div>
+          </div>
+
+          <div class="reference-thankyou">
+            <h3>THANK YOU FOR YOUR ORDER</h3>
+            <p>
+              We appreciate your business and look forward to serving you again!
+            </p>
+            <span>VELLARO | Premium Fragrance &amp; Apparel</span>
+          </div>
+        </div>
+
+        <div class="buttons preview-buttons">
+          <button class="btn-black" id="downloadPngBtn">
+            DOWNLOAD BILL AS IMAGE
+          </button>
+          <button class="btn-white" id="printBtn">PRINT / SAVE PDF</button>
+          <button class="btn-white" id="newBillBtn">CREATE NEW BILL</button>
+        </div>
+      </section>
+    </main>
+
+    <script src="js/app.js"></script>
+  </body>
+</html>
