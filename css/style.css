@@ -265,6 +265,47 @@ textarea {
   font-size: 14px;
 }
 
+.add-item-btn {
+  margin-bottom: 22px;
+}
+
+.added-items {
+  margin-bottom: 28px;
+}
+
+.added-items h4 {
+  margin: 0 0 10px;
+  font-size: 12px;
+  letter-spacing: 1px;
+}
+
+.added-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 0;
+  border-bottom: 1px solid #ddd;
+}
+
+.added-item small {
+  display: block;
+  margin-top: 4px;
+  color: #666;
+}
+
+.added-item > span:last-child {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  white-space: nowrap;
+}
+
+.remove-item-btn {
+  padding: 7px 10px;
+  font-size: 11px;
+}
+
 /* ================= SUMMARY ================= */
 
 .summary {
@@ -299,6 +340,10 @@ textarea {
   font-size: 18px;
 
   font-weight: bold;
+}
+
+.free-delivery {
+  color: #c62828;
 }
 
 /* ================= BUTTONS ================= */

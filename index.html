@@ -189,6 +189,12 @@
             </div>
           </div>
 
+          <button class="btn-white add-item-btn" id="addItemBtn">
+            ADD ITEM
+          </button>
+
+          <div id="addedItems" class="added-items" aria-live="polite"></div>
+
           <!-- PAYMENT -->
 
           <h3 class="section-title">PAYMENT SUMMARY</h3>
@@ -254,10 +260,7 @@
             <div class="summary-row">
               <span> Delivery Fee </span>
 
-              <strong>
-                LKR
-                <span id="deliveryDisplay"> 0.00 </span>
-              </strong>
+              <strong><span id="deliveryDisplay">LKR 0.00</span></strong>
             </div>
 
             <div class="summary-row total">
@@ -372,24 +375,12 @@
                 <th>SUBTOTAL</th>
               </tr>
             </thead>
-            <tbody>
-              <tr>
-                <td id="previewProduct">VELLARO Premium Perfume</td>
-                <td id="previewSize"></td>
-                <td id="previewColor">—</td>
-                <td id="previewQty"></td>
-                <td>Rs.<span id="previewUnitPrice"></span></td>
-                <td>–Rs.<span id="previewDiscount">0.00</span></td>
-                <td>
-                  <strong>Rs.<span id="previewSubtotal"></span></strong>
-                </td>
-              </tr>
-            </tbody>
+            <tbody id="previewItems"></tbody>
           </table>
 
           <div class="reference-summary">
             <div>
-              <span>Subtotal (After Product Discounts)</span
+              <span>Subtotal (After Discount)</span
               ><strong>Rs.<span id="previewSubtotal2"></span></strong>
             </div>
             <div class="discount-line">
@@ -398,7 +389,7 @@
             </div>
             <div>
               <span>Delivery Charge</span
-              ><strong>Rs.<span id="previewDelivery"></span></strong>
+              ><strong><span id="previewDelivery"></span></strong>
             </div>
             <div class="reference-grand">
               <span>TOTAL AMOUNT DUE</span
@@ -411,7 +402,7 @@
             <p>
               We appreciate your business and look forward to serving you again!
             </p>
-            <span>VELLARO | Premium Fragrance &amp; Apparel</span>
+            <span>VELLARO | Premium T-shirt &amp; Fragrance</span>
           </div>
         </div>
 

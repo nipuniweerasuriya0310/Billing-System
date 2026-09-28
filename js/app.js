@@ -97,6 +97,7 @@ const products = {
    ===================================================== */
 
 let currentBill = null;
+let draftItems = [];
 
 /* =====================================================
    3. SHORTCUT
@@ -213,16 +214,8 @@ function updateProductOptions() {
    ===================================================== */
 
 function calculateTotal() {
-  const product = products[$("product").value];
-  const size = $("size").value;
-
-  const quantity = Math.max(1, Number($("quantity").value) || 1);
-
   const delivery = Math.max(0, Number($("deliveryFee").value) || 0);
-
-  const unitPrice = Math.max(0, Number($("unitPrice").value) || 0);
-
-  const subtotal = unitPrice * quantity;
+  const subtotal = draftItems.reduce((sum, item) => sum + item.subtotal, 0);
   const discount = Math.min(
     subtotal,
     Math.max(0, Number($("discount").value) || 0),
@@ -230,15 +223,66 @@ function calculateTotal() {
 
   const grandTotal = subtotal - discount + delivery;
 
-  $("unitPrice").textContent = money(unitPrice);
-
   $("subtotal").textContent = money(subtotal);
 
   $("discountDisplay").textContent = money(discount);
 
-  $("deliveryDisplay").textContent = money(delivery);
+  const deliveryDisplay = $("deliveryDisplay");
+  deliveryDisplay.textContent =
+    delivery > 0 ? `LKR ${money(delivery)}` : "Free Delivery";
+  deliveryDisplay.classList.toggle("free-delivery", delivery === 0);
 
   $("grandTotal").textContent = money(grandTotal);
+}
+
+function addItem() {
+  const productKey = $("product").value;
+  const product = products[productKey];
+  const size = $("size").value;
+  const quantity = Math.max(1, Number($("quantity").value) || 1);
+  const unitPrice = Math.max(0, Number($("unitPrice").value) || 0);
+
+  draftItems.push({
+    product: product.label,
+    productType: productKey,
+    size: product.sizeLabels[size],
+    color: $("color").value,
+    quantity,
+    unitPrice,
+    subtotal: unitPrice * quantity,
+  });
+
+  renderAddedItems();
+  calculateTotal();
+}
+
+function renderAddedItems() {
+  const container = $("addedItems");
+
+  if (draftItems.length === 0) {
+    container.innerHTML = "";
+    return;
+  }
+
+  container.innerHTML = `
+    <h4>ITEMS IN THIS BILL</h4>
+    ${draftItems
+      .map(
+        (item, index) => `
+          <div class="added-item">
+            <span>
+              <strong>${safe(item.product)}</strong>
+              <small>${safe(item.size)}${item.color && item.color !== "Not applicable" ? ` | ${safe(item.color)}` : ""} | Qty ${item.quantity}</small>
+            </span>
+            <span>
+              <strong>LKR ${money(item.subtotal)}</strong>
+              <button class="btn-white remove-item-btn" data-index="${index}" type="button">REMOVE</button>
+            </span>
+          </div>
+        `,
+      )
+      .join("")}
+  `;
 }
 
 /* =====================================================
@@ -297,24 +341,18 @@ function createBill() {
     return;
   }
 
-  const productKey = $("product").value;
-  const product = products[productKey];
-  const size = $("size").value;
-  const sizeLabel = product.sizeLabels[size];
-  const color = $("color").value;
+  if (draftItems.length === 0) {
+    alert("Please add at least one item to the bill.");
 
-  const quantity = Math.max(1, Number($("quantity").value) || 1);
-
-  const unitPrice = Math.max(0, Number($("unitPrice").value) || 0);
+    return;
+  }
 
   const delivery = Math.max(0, Number($("deliveryFee").value) || 0);
+  const subtotal = draftItems.reduce((sum, item) => sum + item.subtotal, 0);
   const discount = Math.min(
-    unitPrice * quantity,
+    subtotal,
     Math.max(0, Number($("discount").value) || 0),
   );
-
-  const subtotal = unitPrice * quantity;
-
   const subtotalAfterDiscount = subtotal - discount;
   const total = subtotalAfterDiscount + delivery;
 
@@ -338,17 +376,19 @@ function createBill() {
       address: address,
     },
 
-    product: product.label,
+    items: draftItems,
 
-    productType: productKey,
+    product: draftItems[0].product,
 
-    size: sizeLabel,
+    productType: draftItems[0].productType,
 
-    color: color,
+    size: draftItems[0].size,
 
-    quantity: quantity,
+    color: draftItems[0].color,
 
-    unitPrice: unitPrice,
+    quantity: draftItems[0].quantity,
+
+    unitPrice: draftItems[0].unitPrice,
 
     subtotal: subtotal,
 
@@ -399,23 +439,49 @@ function showPreview(bill) {
   $("previewHeaderNote").textContent = note;
   $("previewHeaderNote").parentElement.style.display = note ? "" : "none";
 
-  $("previewProduct").textContent = bill.product;
-  $("previewSize").textContent = bill.size;
-  const hasColor = Boolean(bill.color && bill.color !== "Not applicable");
-  $("previewColorHeader").style.display = hasColor ? "" : "none";
-  $("previewColor").style.display = hasColor ? "" : "none";
-  $("previewColor").textContent = hasColor ? bill.color : "";
-  $("previewQty").textContent = bill.quantity;
-  $("previewUnitPrice").textContent = money(bill.unitPrice);
-  $("previewDiscount").textContent = money(bill.discount);
-  $("previewDiscountTotal").textContent = money(bill.discount);
-  $("previewSubtotal").textContent = money(
-    bill.subtotalAfterDiscount ?? bill.subtotal,
+  const items = bill.items?.length
+    ? bill.items
+    : [
+        {
+          product: bill.product,
+          size: bill.size,
+          color: bill.color,
+          quantity: bill.quantity,
+          unitPrice: bill.unitPrice,
+          subtotal: bill.subtotal,
+          discount: bill.discount,
+        },
+      ];
+  const hasColor = items.some(
+    (item) => item.color && item.color !== "Not applicable",
   );
+  $("previewColorHeader").style.display = hasColor ? "" : "none";
+  $("previewItems").innerHTML = items
+    .map(
+      (item) => `
+        <tr>
+          <td>${safe(item.product)}</td>
+          <td>${safe(item.size)}</td>
+          <td style="display:${hasColor ? "table-cell" : "none"}">${hasColor ? safe(item.color || "—") : ""}</td>
+          <td>${safe(item.quantity)}</td>
+          <td>Rs.${money(item.unitPrice)}</td>
+          <td>–Rs.${money(item.discount || 0)}</td>
+          <td><strong>Rs.${money(item.subtotal)}</strong></td>
+        </tr>
+      `,
+    )
+    .join("");
+  $("previewDiscountTotal").textContent = money(bill.discount);
   $("previewSubtotal2").textContent = money(
     bill.subtotalAfterDiscount ?? bill.subtotal,
   );
-  $("previewDelivery").textContent = money(bill.delivery);
+  const previewDelivery = $("previewDelivery");
+  previewDelivery.textContent =
+    Number(bill.delivery) > 0 ? `Rs.${money(bill.delivery)}` : "Free Delivery";
+  previewDelivery.classList.toggle(
+    "free-delivery",
+    Number(bill.delivery) === 0,
+  );
   $("previewGrandTotal").textContent = money(bill.total);
 
   currentBill = bill;
@@ -446,6 +512,9 @@ function clearForm() {
   $("deliveryFee").value = 0;
 
   $("paymentMethod").value = "Cash on Delivery";
+
+  draftItems = [];
+  renderAddedItems();
 
   updateProductOptions();
 }
@@ -675,6 +744,8 @@ $("discount").addEventListener("input", calculateTotal);
 
 $("deliveryFee").addEventListener("input", calculateTotal);
 
+$("addItemBtn").addEventListener("click", addItem);
+
 $("createBillBtn").addEventListener("click", createBill);
 
 $("clearBtn").addEventListener("click", clearForm);
@@ -701,6 +772,16 @@ $("historyTable").addEventListener("click", (event) => {
 
   if (deleteButton) {
     deleteBill(deleteButton.dataset.bill);
+  }
+});
+
+$("addedItems").addEventListener("click", (event) => {
+  const button = event.target.closest(".remove-item-btn");
+
+  if (button) {
+    draftItems.splice(Number(button.dataset.index), 1);
+    renderAddedItems();
+    calculateTotal();
   }
 });
 
