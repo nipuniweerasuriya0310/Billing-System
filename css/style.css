@@ -8,6 +8,7 @@ body {
   font-family: Arial, Helvetica, sans-serif;
   background: #f4f4f4;
   color: #111;
+  font-weight: 400;
 }
 
 /* ================= SIDEBAR ================= */
@@ -94,11 +95,13 @@ body {
 .topbar h2 {
   font-size: 25px;
   letter-spacing: 1px;
+  font-weight: 700;
 }
 
 #currentDate {
   font-size: 13px;
-  color: #555;
+  color: #222;
+  font-weight: 600;
 }
 
 /* ================= SECTIONS ================= */
@@ -134,7 +137,9 @@ body {
 .card p {
   font-size: 12px;
 
-  color: #777;
+  color: #333;
+
+  font-weight: bold;
 
   text-transform: uppercase;
 
@@ -145,12 +150,15 @@ body {
   margin-top: 10px;
 
   font-size: 27px;
+  font-weight: 700;
 }
 
 .welcome p {
   line-height: 1.8;
 
-  color: #555;
+  color: #222;
+
+  font-weight: 600;
 
   margin-bottom: 8px;
 }
@@ -173,6 +181,8 @@ body {
   text-transform: uppercase;
 
   letter-spacing: 2px;
+
+  font-weight: 700;
 
   border-bottom: 2px solid #000;
 
@@ -205,6 +215,8 @@ label {
   font-size: 12px;
 
   font-weight: bold;
+
+  color: #111;
 
   margin-bottom: 7px;
 
@@ -291,7 +303,8 @@ textarea {
 .added-item small {
   display: block;
   margin-top: 4px;
-  color: #666;
+  color: #333;
+  font-weight: 600;
 }
 
 .added-item > span:last-child {
@@ -397,7 +410,8 @@ button {
 
   font-size: 12px;
 
-  color: #777;
+  color: #333;
+  font-weight: 600;
 }
 
 /* ================= HISTORY ================= */
@@ -449,7 +463,8 @@ td {
 
   padding: 40px;
 
-  color: #777;
+  color: #333;
+  font-weight: 600;
 }
 
 /* ================= BILL / REFERENCE INVOICE ================= */
@@ -496,6 +511,7 @@ td {
   gap: 7px;
   font-size: 15px;
   line-height: 1.25;
+  font-weight: 700;
 }
 
 .reference-two-col {
@@ -523,6 +539,7 @@ td {
   font-size: 16px;
   line-height: 1.35;
   overflow-wrap: anywhere;
+  font-weight: 600;
 }
 
 .invoice-note-header {
@@ -563,6 +580,7 @@ td {
   border-bottom: 1px solid #ddd;
   font-size: 15px;
   vertical-align: top;
+  font-weight: 600;
 }
 
 .reference-items tr:last-child td {
@@ -582,6 +600,10 @@ td {
   gap: 20px;
   padding: 12px 0;
   font-size: 16px;
+}
+
+.reference-summary strong {
+  font-weight: 800;
 }
 
 .reference-summary .discount-line {
